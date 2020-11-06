@@ -1,4 +1,4 @@
 FROM openjdk:11.0.9-slim
 
-COPY ./build/libs/*.jar ./dis-auth.jar
-ENTRYPOINT ["java", "/dis-auth.jar"]
+COPY ./build/libs/*.jar dis-auth.jar
+ENTRYPOINT ["java","-jar","/dis-auth.jar"]
