@@ -1,7 +1,7 @@
 package com.example.auth_dis.util.handler;
 
 
-import com.example.auth_dis.Exception3.*;
+import com.example.auth_dis.Exception.*;
 import com.example.auth_dis.util.forms.ApiErrorResponseForm;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.http.HttpStatus;

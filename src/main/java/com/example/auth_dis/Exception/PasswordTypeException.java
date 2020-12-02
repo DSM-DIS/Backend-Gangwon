@@ -1,4 +1,4 @@
-package com.example.auth_dis.Exception3;
+package com.example.auth_dis.Exception;
 
 public class PasswordTypeException extends RuntimeException {
     public PasswordTypeException() {

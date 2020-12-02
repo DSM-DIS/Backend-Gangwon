@@ -1,8 +1,8 @@
 package com.example.auth_dis.service.auth;
 
-import com.example.auth_dis.Domain.Account;
+import com.example.auth_dis.Domain.user.Account;
 import com.example.auth_dis.Domain.Token;
-import com.example.auth_dis.Exception3.*;
+import com.example.auth_dis.Exception.*;
 import com.example.auth_dis.Repository.AccountRepository;
 import com.example.auth_dis.jwt.JwtTokenUtil;
 import com.example.auth_dis.service.JwtUserDetailsService;

@@ -1,7 +1,7 @@
 package com.example.auth_dis.service;
 
 
-import com.example.auth_dis.Domain.Account;
+import com.example.auth_dis.Domain.user.Account;
 import com.example.auth_dis.Repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
