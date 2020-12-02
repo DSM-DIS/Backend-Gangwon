@@ -2,6 +2,7 @@ package com.example.auth_dis.jwt;
 
 import com.example.auth_dis.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -27,26 +28,18 @@ import java.util.List;
 import java.util.Map;
 
 
+@RequiredArgsConstructor
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    JwtTokenUtil jtu;
-
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
-
-    @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public Authentication getAuthentication(String token) {
-        Map<String, Object> parseInfo = jtu.getUserParseInfo(token);
-        System.out.println("parseinfo: " + parseInfo);
-        List<String> rs =(List)parseInfo.get("role");
-        Collection<GrantedAuthority> tmp= new ArrayList<>();
-        for (String a: rs) {
+        Map<String, Object> parseInfo = jwtTokenUtil.getUserParseInfo(token);
+        List<String> rs = (List) parseInfo.get("role");
+        Collection<GrantedAuthority> tmp = new ArrayList<>();
+        for (String a : rs) {
             tmp.add(new SimpleGrantedAuthority(a));
         }
         UserDetails userDetails = User.builder().username(String.valueOf(parseInfo.get("username"))).authorities(tmp).password("asd").build();
@@ -56,7 +49,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Bean
-    public FilterRegistrationBean JwtRequestFilterRegistration (JwtRequestFilter filter) {
+    public FilterRegistrationBean JwtRequestFilterRegistration(JwtRequestFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean(filter);
         registration.setEnabled(false);
         return registration;
@@ -73,7 +66,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
             jwtToken = requestTokenHeader.substring(7);
             logger.info("token in requestfilter: " + jwtToken);
 
@@ -81,8 +74,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 logger.warn("Unable to get JWT Token");
-            }
-            catch (ExpiredJwtException e) {
+            } catch (ExpiredJwtException e) {
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
@@ -94,7 +86,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             logger.warn("this token already logout!");
         } else {
             //DB access 대신에 파싱한 정보로 유저 만들기!
-            Authentication authen =  getAuthentication(jwtToken);
+            Authentication authen = getAuthentication(jwtToken);
             //만든 authentication 객체로 매번 인증받기
             SecurityContextHolder.getContext().setAuthentication(authen);
             response.setHeader("username", username);
