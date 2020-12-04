@@ -31,10 +31,10 @@ public class JwtTokenUtil implements Serializable {
     private String secret;
 
 
-    public String generateAccessToken(Integer userId) {
+    public String generateAccessToken(String email) {
 
         return Jwts.builder()
-                .setSubject(userId.toString())
+                .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_VALIDITY * 1000))
                 .claim("type", "access_token")
@@ -42,9 +42,9 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public String generateRefreshToken(Integer userId) {
+    public String generateRefreshToken(String email) {
         return Jwts.builder()
-                .setSubject(userId.toString())
+                .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_VALIDITY * 1000))
                 .claim("type", "refresh_token")
@@ -81,13 +81,13 @@ public class JwtTokenUtil implements Serializable {
 
     public Authentication getAuthentication(String token) {
 
-        User user = userRepository.findById(getId(token)).orElseThrow();
+        User user = userRepository.findByEmail(getId(token)).orElseThrow();
         return new UsernamePasswordAuthenticationToken(user, "");
     }
 
 
-    public Integer getId(String token) {
-        return Integer.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject());
+    public String getId(String token) {
+        return String.valueOf(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject());
     }
 
 }

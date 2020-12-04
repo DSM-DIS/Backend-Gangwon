@@ -1,19 +1,13 @@
 package com.example.auth_dis.jwt;
 
-import com.example.auth_dis.service.JwtUserDetailsService;
+import com.example.auth_dis.Domain.user.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,31 +16,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 
 @RequiredArgsConstructor
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class JwtRequestFilter extends OncePerRequestFilter{
 
     private final JwtTokenUtil jwtTokenUtil;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final UserRepository userRepository;
 
-    public Authentication getAuthentication(String token) {
-        Map<String, Object> parseInfo = jwtTokenUtil.getUserParseInfo(token);
-        List<String> rs = (List) parseInfo.get("role");
-        Collection<GrantedAuthority> tmp = new ArrayList<>();
-        for (String a : rs) {
-            tmp.add(new SimpleGrantedAuthority(a));
-        }
-        UserDetails userDetails = User.builder().username(String.valueOf(parseInfo.get("username"))).authorities(tmp).password("asd").build();
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
-        return usernamePasswordAuthenticationToken;
-    }
 
     @Bean
     public FilterRegistrationBean JwtRequestFilterRegistration(JwtRequestFilter filter) {
@@ -56,39 +35,39 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         System.out.println("REQUEST : " + request.getHeader("Authorization"));
         String requestTokenHeader = request.getHeader("Authorization");
 
         logger.info("tokenHeader: " + requestTokenHeader);
-        String username = null;
+        String email = null;
         String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             logger.info("token in requestfilter: " + jwtToken);
 
             try {
-                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+                email = jwtTokenUtil.getId(jwtToken);
             } catch (IllegalArgumentException e) {
                 logger.warn("Unable to get JWT Token");
-            } catch (ExpiredJwtException e) {
+            }
+            catch (ExpiredJwtException e) {
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
         }
 
-        if (username == null) {
+        if (email == null) {
             logger.info("token maybe expired: username is null.");
         } else if (redisTemplate.opsForValue().get(jwtToken) != null) {
             logger.warn("this token already logout!");
         } else {
             //DB access 대신에 파싱한 정보로 유저 만들기!
-            Authentication authen = getAuthentication(jwtToken);
+            Authentication authen =  jwtTokenUtil.getAuthentication(jwtToken);
             //만든 authentication 객체로 매번 인증받기
             SecurityContextHolder.getContext().setAuthentication(authen);
+            String username= email;
             response.setHeader("username", username);
         }
         chain.doFilter(request, response);
