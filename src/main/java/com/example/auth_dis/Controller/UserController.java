@@ -1,6 +1,8 @@
 package com.example.auth_dis.Controller;
 
 import com.example.auth_dis.Domain.user.User;
+import com.example.auth_dis.paylod.UserInformationResponse;
+import com.example.auth_dis.paylod.UserResponse;
 import com.example.auth_dis.service.auth.AuthService;
 import com.example.auth_dis.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +18,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(path="/user")
-    public Map<String, Object> SIGN_IN (@RequestBody @Valid User user) {
-        return  userService.SIGN_IN(user);
+    public void SIGN_IN (@RequestBody @Valid UserResponse user) {
+        userService.SIGN_IN(user);
     }
 
     @GetMapping(path="/user")
-    public Map<String, Object> GET_INFO_BY_ACCESS(@RequestHeader("Authorization") String AccessToken) {
+    public UserInformationResponse GET_INFO_BY_ACCESS(@RequestHeader("Authorization") String AccessToken) {
         return userService.GET_INFO_BY_ACCESS(AccessToken);
     }
 
