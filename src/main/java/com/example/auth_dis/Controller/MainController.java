@@ -53,4 +53,9 @@ public class MainController {
     public Map<String, Object> GET_ACCESS_BY_REFRESH(@RequestHeader("refreshToken") String RefreshToken) {
         return authService.GET_ACCESS_BY_REFRESH(RefreshToken);
     }
+    
+    @PostMapping("/user/test")
+    public String test() {
+        return "test";
+    }
 }
