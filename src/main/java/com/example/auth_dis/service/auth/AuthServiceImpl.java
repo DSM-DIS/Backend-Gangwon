@@ -3,6 +3,8 @@ package com.example.auth_dis.service.auth;
 import com.example.auth_dis.Domain.Token;
 import com.example.auth_dis.Domain.user.User;
 import com.example.auth_dis.Domain.user.UserRepository;
+import com.example.auth_dis.Exception.PasswordNotFoundException;
+import com.example.auth_dis.Exception.UserNotFoundException;
 import com.example.auth_dis.jwt.JwtTokenUtil;
 
 import com.example.auth_dis.paylod.AccountRequest;
@@ -17,6 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -30,12 +33,18 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtTokenUtil jwtTokenUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public TokenResponse LOG_IN(AccountRequest request) {
         final String accessToken = jwtTokenUtil.generateAccessToken(request.getEmail());
         final String refreshToken = jwtTokenUtil.generateRefreshToken(request.getEmail());
 
+        User user= userRepository.findByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
+        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
+            System.out.println(request.getPassword()+": : "+user.getPassword());
+            throw new PasswordNotFoundException();
+        }
         Token retok = new Token();
         retok.setUsername(request.getEmail());
         retok.setRefreshToken(refreshToken);
@@ -46,15 +55,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<?> LOG_OUT(String RefreshToken) {
-        String username;
+        String email;
         String refreshToken = RefreshToken;
         try {
-            username = jwtTokenUtil.getId(refreshToken);
+            email = jwtTokenUtil.getId(refreshToken);
         } catch (ExpiredJwtException e) { //expire됐을 때
-            username = e.getClaims().getSubject();
-            logger.info("username from expired access token: " + username);
+            email = e.getClaims().getSubject();
+            logger.info("username from expired access token: " + email);
         }
-        User user = userRepository.findByEmail(username)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow();
 
         try {
