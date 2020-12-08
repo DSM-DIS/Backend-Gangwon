@@ -17,7 +17,6 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 @RequestMapping
 public class AuthController {
-    private Logger logger = LoggerFactory.getLogger(ApplicationRunner.class);
 
     private final AuthService authService;
 

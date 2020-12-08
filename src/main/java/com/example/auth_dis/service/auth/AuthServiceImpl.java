@@ -17,7 +17,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -26,15 +25,11 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Value("${jwt.secret}")
-    private String secret;
-
     private Logger logger = LoggerFactory.getLogger(ApplicationRunner.class);
 
     private final UserRepository userRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final JwtTokenUtil jwtTokenUtil;
-    private final AuthenticationManager am;
 
     @Override
     public TokenResponse LOG_IN(AccountRequest request) {
@@ -44,7 +39,8 @@ public class AuthServiceImpl implements AuthService {
         Token retok = new Token();
         retok.setUsername(request.getEmail());
         retok.setRefreshToken(refreshToken);
-
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        vop.set(request.getEmail(), retok);
         return new TokenResponse(accessToken, refreshToken);
     }
 

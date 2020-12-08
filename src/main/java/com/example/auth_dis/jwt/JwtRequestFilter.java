@@ -23,8 +23,7 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter{
 
     private final JwtTokenUtil jwtTokenUtil;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final UserRepository userRepository;
+//    private  RedisTemplate<String, Object> redisTemplate;
 
 
     @Bean
@@ -60,7 +59,7 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 
         if (email == null) {
             logger.info("token maybe expired: username is null.");
-        } else if (redisTemplate.opsForValue().get(jwtToken) != null) {
+//        } else if (redisTemplate.opsForValue().get(jwtToken) != null) {
             logger.warn("this token already logout!");
         } else {
             //DB access 대신에 파싱한 정보로 유저 만들기!
