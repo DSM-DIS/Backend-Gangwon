@@ -92,4 +92,9 @@ public class ApiExceptionHandler {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No match JWT token", "토큰의 값이 옳지 않습니다.");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiErrorResponseForm> UserNotFoundException(UserNotFoundException ex) {
+        ApiErrorResponseForm response = new ApiErrorResponseForm("No match JWT token", "일치하는 유저가 없습니다.");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }

@@ -60,13 +60,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("8000")
-                .allowedHeaders("*");
-    }
 
 }
