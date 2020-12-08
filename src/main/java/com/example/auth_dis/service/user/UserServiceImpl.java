@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     private Logger logger = LoggerFactory.getLogger(ApplicationRunner.class);
 
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
                 User.builder()
                         .email(user.getEmail())
                         .name(user.getName())
-                        .password(user.getPassword())
+                        .password(passwordEncoder.encode(user.getPassword()))
                         .build()
         );
     }
