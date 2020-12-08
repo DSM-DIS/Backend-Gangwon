@@ -1,4 +1,4 @@
-package com.example.auth_dis.Exception3;
+package com.example.auth_dis.Exception;
 
 public class IdNotFoundException extends RuntimeException {
     public IdNotFoundException(){

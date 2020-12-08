@@ -1,7 +1,7 @@
 package com.example.auth_dis.util.handler;
 
 
-import com.example.auth_dis.Exception3.*;
+import com.example.auth_dis.Exception.*;
 import com.example.auth_dis.util.forms.ApiErrorResponseForm;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.http.HttpStatus;
@@ -90,6 +90,11 @@ public class ApiExceptionHandler {
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<ApiErrorResponseForm> SignatureException(SignatureException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No match JWT token", "토큰의 값이 옳지 않습니다.");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiErrorResponseForm> UserNotFoundException(UserNotFoundException ex) {
+        ApiErrorResponseForm response = new ApiErrorResponseForm("No match JWT token", "일치하는 유저가 없습니다.");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
