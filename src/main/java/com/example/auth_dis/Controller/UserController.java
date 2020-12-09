@@ -19,6 +19,7 @@ public class UserController {
 
     @PostMapping(path="/user")
     public void SIGN_IN (@RequestBody @Valid UserResponse user) {
+        System.out.println(user);
         userService.SIGN_IN(user);
     }
 
