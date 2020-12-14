@@ -1,6 +1,7 @@
 package com.example.auth_dis.service.auth;
 
 import com.example.auth_dis.Domain.Token;
+import com.example.auth_dis.Domain.TokenRepository;
 import com.example.auth_dis.Domain.user.User;
 import com.example.auth_dis.Domain.user.UserRepository;
 import com.example.auth_dis.Exception.PasswordNotFoundException;
@@ -36,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     final RedisTemplate<String, Object> redisTemplate;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
+    private final TokenRepository tokenRepository;
 
     @Override
     public TokenResponse LOG_IN(AccountRequest request) {
@@ -48,12 +50,13 @@ public class AuthServiceImpl implements AuthService {
             System.out.println(request.getPassword()+": : "+user.getPassword());
             throw new PasswordNotFoundException();
         }
-        Token retok = new Token();
+        System.out.println("작동_레디스1");
+
+        Token retok = new Token(request.getId(),refreshToken);
         retok.setUsername(request.getId());
         retok.setRefreshToken(refreshToken);
-        System.out.println("작동_레디스");
-        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        vop.set(request.getId(), retok);
+//        tokenRepository.save(retok);
+        System.out.println("작동_레디스2");
         return new TokenResponse(accessToken, refreshToken);
     }
 
