@@ -35,7 +35,7 @@ import java.util.function.Function;
         System.out.println("작동 토큰");
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_VALIDITY * 1000))
                 .claim("type", "access_token")
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -45,7 +45,7 @@ import java.util.function.Function;
     public String generateRefreshToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_REFRESH_TOKEN_VALIDITY * 1000))
                 .claim("type", "refresh_token")
                 .signWith(SignatureAlgorithm.HS512, secret)
