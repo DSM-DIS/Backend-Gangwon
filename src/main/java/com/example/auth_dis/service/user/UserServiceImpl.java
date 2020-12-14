@@ -34,13 +34,13 @@ public class UserServiceImpl implements UserService {
         String pw_role = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}";
         String Id_role = ".{8,20}";
         String name_role = ".{1,20}";
-        Matcher Id_matcher = Pattern.compile(Id_role).matcher(user.getEmail());
+        Matcher Id_matcher = Pattern.compile(Id_role).matcher(user.getId());
         Matcher password_matcher = Pattern.compile(pw_role).matcher(user.getPassword());
-        Matcher name_matcher = Pattern.compile(name_role).matcher(user.getName());
+        Matcher name_matcher = Pattern.compile(name_role).matcher(user.getUsername());
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(user.getId()).isPresent()) {
             throw new DuplicateIdException();
-        } else if (userRepository.findByName(user.getName()).isPresent()) {
+        } else if (userRepository.findByName(user.getUsername()).isPresent()) {
             throw new DuplicateNameException();
         } else if (!Id_matcher.matches()) {
             throw new IdTypeException();
@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
         } else {
             userRepository.save(
                     User.builder()
-                            .email(user.getEmail())
-                            .name(user.getName())
+                            .email(user.getId())
+                            .name(user.getUsername())
                             .password(passwordEncoder.encode(user.getPassword()))
                             .build()
             );

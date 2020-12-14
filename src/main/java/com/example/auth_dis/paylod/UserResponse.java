@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserResponse {
-    private String email;
+    private String id;
     private String password;
-    private String name;
+    private String username;
 }
