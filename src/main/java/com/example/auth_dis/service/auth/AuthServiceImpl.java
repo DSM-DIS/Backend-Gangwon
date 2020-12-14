@@ -41,25 +41,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse LOG_IN(AccountRequest request) {
-        System.out.println("작동_로그인");
-        final String accessToken = jwtTokenUtil.generateAccessToken(request.getId());
-        final String refreshToken = jwtTokenUtil.generateRefreshToken(request.getId());
-
-        User user= userRepository.findById(request.getId()).orElseThrow(UserNotFoundException::new);
-        if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
-            System.out.println(request.getPassword()+": : "+user.getPassword());
-            throw new PasswordNotFoundException();
-        }
-        System.out.println("작동_레디스1");
-
-        Token retok = new Token(request.getId(),refreshToken);
-        retok.setUsername(request.getId());
-        retok.setRefreshToken(refreshToken);
-        tokenRepository.save(retok);
-        System.out.println("작동_레디스2 ");
-        return new TokenResponse(accessToken, refreshToken);
+        return userRepository.findById(request.getId())
+                .filter(customer -> passwordEncoder.matches(request.getPassword(), customer.getPassword()))
+                .map(User::getEmail)
+                .map(id -> {
+                    String refreshToken = jwtTokenUtil.generateRefreshToken(id);
+                    return new Token(id, refreshToken);
+                })
+                .map(tokenRepository::save)
+                .map(refreshToken -> {
+                    String accessToken = jwtTokenUtil.generateAccessToken(refreshToken.getUsername());
+                    return new TokenResponse(accessToken, refreshToken.getRefreshToken());
+                })
+                .orElseThrow(UserNotFoundException::new);
     }
-
     @Override
     public ResponseEntity<?> LOG_OUT(String RefreshToken) {
         String email;
