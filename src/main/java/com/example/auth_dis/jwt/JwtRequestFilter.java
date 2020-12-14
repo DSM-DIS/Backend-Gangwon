@@ -20,7 +20,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Component
-public class JwtRequestFilter extends OncePerRequestFilter{
+public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -35,26 +35,21 @@ public class JwtRequestFilter extends OncePerRequestFilter{
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        System.out.println("REQUEST : " + request.getHeader("Authorization"));
         String requestTokenHeader = request.getHeader("Authorization");
 
-        logger.info("tokenHeader: " + requestTokenHeader);
         String email = null;
         String jwtToken = null;
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
-            logger.info("token in requestfilter: " + jwtToken);
 
             try {
                 email = jwtTokenUtil.getId(jwtToken);
             } catch (IllegalArgumentException e) {
                 logger.warn("Unable to get JWT Token");
+            } catch (ExpiredJwtException e) {
+                logger.warn("Expired to get JWT Token");
             }
-            catch (ExpiredJwtException e) {
-            }
-        } else {
-            logger.warn("JWT Token does not begin with Bearer String");
         }
 
         if (email == null) {
@@ -63,10 +58,10 @@ public class JwtRequestFilter extends OncePerRequestFilter{
             logger.warn("this token already logout!");
         } else {
             //DB access 대신에 파싱한 정보로 유저 만들기!
-            Authentication authen =  jwtTokenUtil.getAuthentication(jwtToken);
+            Authentication authen = jwtTokenUtil.getAuthentication(jwtToken);
             //만든 authentication 객체로 매번 인증받기
             SecurityContextHolder.getContext().setAuthentication(authen);
-            String username= email;
+            String username = email;
             response.setHeader("username", username);
         }
         chain.doFilter(request, response);
