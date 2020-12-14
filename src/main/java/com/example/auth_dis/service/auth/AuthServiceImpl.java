@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         final String accessToken = jwtTokenUtil.generateAccessToken(request.getId());
         final String refreshToken = jwtTokenUtil.generateRefreshToken(request.getId());
 
-        User user= userRepository.findByEmail(request.getId()).orElseThrow(UserNotFoundException::new);
+        User user= userRepository.findById(request.getId()).orElseThrow(UserNotFoundException::new);
         if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             System.out.println(request.getPassword()+": : "+user.getPassword());
             throw new PasswordNotFoundException();
@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
             email = e.getClaims().getSubject();
             logger.info("username from expired access token: " + email);
         }
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findById(email)
                 .orElseThrow();
 
         try {
@@ -94,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
 
             username = jwtTokenUtil.getId(refreshToken);
 
-            User user = userRepository.findByEmail(username).orElseThrow();
+            User user = userRepository.findById(username).orElseThrow();
             String email = user.getEmail();
 
             try {

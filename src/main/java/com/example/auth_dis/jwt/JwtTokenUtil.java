@@ -81,7 +81,7 @@ import java.util.function.Function;
 
     public Authentication getAuthentication(String token) {
 
-        User user = userRepository.findByEmail(getId(token)).orElseThrow();
+        User user = userRepository.findById(getId(token)).orElseThrow();
         return new UsernamePasswordAuthenticationToken(user, "");
     }
 

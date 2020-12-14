@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         Matcher password_matcher = Pattern.compile(pw_role).matcher(user.getPassword());
         Matcher name_matcher = Pattern.compile(name_role).matcher(user.getUsername());
 
-        if (userRepository.findByEmail(user.getId()).isPresent()) {
+        if (userRepository.findById(user.getId()).isPresent()) {
             System.out.println("아이디 중복");
             throw new DuplicateIdException();
         } else if (userRepository.findByName(user.getUsername()).isPresent()) {
@@ -54,13 +54,18 @@ public class UserServiceImpl implements UserService {
             System.out.println("이름 형식에 맞지 않음");
             throw new IdTypeException();
         } else {
-            userRepository.save(
-                    User.builder()
-                            .email(user.getId())
-                            .name(user.getUsername())
-                            .password(passwordEncoder.encode(user.getPassword()))
-                            .build()
-            );
+            try {
+                userRepository.save(
+                        User.builder()
+                                .email(user.getId())
+                                .name(user.getUsername())
+                                .password(passwordEncoder.encode(user.getPassword()))
+                                .build()
+                );
+            } catch (Exception e) {
+                System.out.println("값 비었음");
+            }
+
         }
     }
 
@@ -75,7 +80,7 @@ public class UserServiceImpl implements UserService {
         }
         logger.info(email);
         if (email != null) {
-            User user = userRepository.findByEmail(email).orElseThrow();
+            User user = userRepository.findById(email).orElseThrow();
             UserInformationResponse userInformationResponse = new UserInformationResponse(user.getName(), user.getEmail());
             return userInformationResponse;
         } else {
