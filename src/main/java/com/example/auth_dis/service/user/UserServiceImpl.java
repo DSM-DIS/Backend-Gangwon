@@ -39,14 +39,19 @@ public class UserServiceImpl implements UserService {
         Matcher name_matcher = Pattern.compile(name_role).matcher(user.getUsername());
 
         if (userRepository.findByEmail(user.getId()).isPresent()) {
+            System.out.println("아이디 중복");
             throw new DuplicateIdException();
         } else if (userRepository.findByName(user.getUsername()).isPresent()) {
+            System.out.println("이름 중복");
             throw new DuplicateNameException();
         } else if (!Id_matcher.matches()) {
+            System.out.println("아이디 형식에 맞지 않음");
             throw new IdTypeException();
         } else if ((!password_matcher.matches())) {
+            System.out.println("비번 형식에 맞지 않음");
             throw new PasswordTypeException();
         } else if (!name_matcher.matches()) {
+            System.out.println("이름 형식에 맞지 않음");
             throw new IdTypeException();
         } else {
             userRepository.save(
@@ -65,6 +70,7 @@ public class UserServiceImpl implements UserService {
         try {
             email = jwtTokenUtil.getId(AccessToken);
         } catch (Exception e) {
+            System.out.println("토큰 값이 옳지 않음");
             throw new TokenInvalidException("토큰 값이 옳지 않음.");
         }
         logger.info(email);
@@ -73,6 +79,7 @@ public class UserServiceImpl implements UserService {
             UserInformationResponse userInformationResponse = new UserInformationResponse(user.getName(), user.getEmail());
             return userInformationResponse;
         } else {
+            System.out.println("토큰 값이 옳지 않음");
             throw new TokenInvalidException("토큰 값이 옳지 않음.");
         }
     }
