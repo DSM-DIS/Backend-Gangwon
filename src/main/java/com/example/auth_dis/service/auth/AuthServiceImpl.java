@@ -37,19 +37,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse LOG_IN(AccountRequest request) {
-        final String accessToken = jwtTokenUtil.generateAccessToken(request.getEmail());
-        final String refreshToken = jwtTokenUtil.generateRefreshToken(request.getEmail());
+        final String accessToken = jwtTokenUtil.generateAccessToken(request.getId());
+        final String refreshToken = jwtTokenUtil.generateRefreshToken(request.getId());
 
-        User user= userRepository.findByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
+        User user= userRepository.findByEmail(request.getId()).orElseThrow(UserNotFoundException::new);
         if(!passwordEncoder.matches(request.getPassword(),user.getPassword())){
             System.out.println(request.getPassword()+": : "+user.getPassword());
             throw new PasswordNotFoundException();
         }
         Token retok = new Token();
-        retok.setUsername(request.getEmail());
+        retok.setUsername(request.getId());
         retok.setRefreshToken(refreshToken);
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        vop.set(request.getEmail(), retok);
+        vop.set(request.getId(), retok);
         return new TokenResponse(accessToken, refreshToken);
     }
 

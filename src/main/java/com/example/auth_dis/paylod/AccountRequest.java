@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
 public class AccountRequest {
 
     @NotEmpty
-    private String email;
+    private String id;
 
     @NotEmpty
     private String password;
