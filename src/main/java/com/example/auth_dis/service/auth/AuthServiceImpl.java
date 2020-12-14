@@ -13,6 +13,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,7 +32,8 @@ public class AuthServiceImpl implements AuthService {
     private Logger logger = LoggerFactory.getLogger(ApplicationRunner.class);
 
     private final UserRepository userRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    final RedisTemplate<String, Object> redisTemplate;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
 
