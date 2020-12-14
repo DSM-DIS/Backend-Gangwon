@@ -55,8 +55,8 @@ public class AuthServiceImpl implements AuthService {
         Token retok = new Token(request.getId(),refreshToken);
         retok.setUsername(request.getId());
         retok.setRefreshToken(refreshToken);
-//        tokenRepository.save(retok);
-        System.out.println("작동_레디스2");
+        tokenRepository.save(retok);
+        System.out.println("작동_레디스2 ");
         return new TokenResponse(accessToken, refreshToken);
     }
 
