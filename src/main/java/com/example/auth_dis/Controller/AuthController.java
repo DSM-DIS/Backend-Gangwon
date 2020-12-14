@@ -24,6 +24,7 @@ public class AuthController {
     }
     @PostMapping(path = "/auth")
     public TokenResponse LOG_IN(@RequestBody AccountRequest accountRequest) throws Exception {
+        System.out.println("작동_컨트롤러");
         return authService.LOG_IN(accountRequest);
     }
     @PatchMapping(path="/auth")

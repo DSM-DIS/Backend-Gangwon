@@ -37,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse LOG_IN(AccountRequest request) {
+        System.out.println("작동_로그인");
         final String accessToken = jwtTokenUtil.generateAccessToken(request.getId());
         final String refreshToken = jwtTokenUtil.generateRefreshToken(request.getId());
 
