@@ -32,7 +32,7 @@ import java.util.function.Function;
 
 
     public String generateAccessToken(String email) {
-
+        System.out.println("작동 토큰");
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
