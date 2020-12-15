@@ -49,8 +49,12 @@ public class AuthServiceImpl implements AuthService {
         Token retok = new Token();
         retok.setUsername(request.getId());
         retok.setRefreshToken(refreshToken);
-        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        vop.set(request.getId(), retok);
+        try {
+            ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+            vop.set(request.getId(), retok);
+        }catch (Exception e){
+            System.out.println("이거 왜안되냐고");
+        }
         return new TokenResponse(accessToken, refreshToken);
     }
 
