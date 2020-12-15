@@ -1,7 +1,6 @@
 package com.example.auth_dis.service.auth;
 
 import com.example.auth_dis.Domain.Token;
-import com.example.auth_dis.Domain.TokenRepository;
 import com.example.auth_dis.Domain.user.User;
 import com.example.auth_dis.Domain.user.UserRepository;
 import com.example.auth_dis.Exception.PasswordNotFoundException;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -37,24 +35,27 @@ public class AuthServiceImpl implements AuthService {
     final RedisTemplate<String, Object> redisTemplate;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
-    private final TokenRepository tokenRepository;
 
     @Override
     public TokenResponse LOG_IN(AccountRequest request) {
-        return userRepository.findById(request.getId())
-                .filter(customer -> passwordEncoder.matches(request.getPassword(), customer.getPassword()))
-                .map(User::getEmail)
-                .map(id -> {
-                    String refreshToken = jwtTokenUtil.generateRefreshToken(id);
-                    return new Token(id, refreshToken);
-                })
-                .map(tokenRepository::save)
-                .map(refreshToken -> {
-                    String accessToken = jwtTokenUtil.generateAccessToken(refreshToken.getUsername());
-                    return new TokenResponse(accessToken, refreshToken.getRefreshToken());
-                })
-                .orElseThrow(UserNotFoundException::new);
+        final String accessToken = jwtTokenUtil.generateAccessToken(request.getId());
+        final String refreshToken = jwtTokenUtil.generateRefreshToken(request.getId());
+
+        User user = userRepository.findById(request.getId()).orElseThrow(UserNotFoundException::new);
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            System.out.println(request.getPassword() + ": : " + user.getPassword());
+            throw new PasswordNotFoundException();
+        }
+        Token retok = new Token();
+        retok.setUsername(request.getId());
+        retok.setRefreshToken(refreshToken);
+        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
+        vop.set(request.getId(), retok);
+        return new TokenResponse(accessToken, refreshToken);
     }
+
+
+
     @Override
     public ResponseEntity<?> LOG_OUT(String RefreshToken) {
         String email;
@@ -108,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
                 if (refreshToken.equals(refreshTokenFromDb)) {
                     logger.info("a");
 
-                     newtok = jwtTokenUtil.generateAccessToken(email);
+                    newtok = jwtTokenUtil.generateAccessToken(email);
                 }
             } catch (IllegalArgumentException e) {
                 logger.warn("illegal argument!!");
@@ -117,6 +118,6 @@ public class AuthServiceImpl implements AuthService {
             throw e;
         }
 
-        return new TokenResponse(newtok,RefreshToken);
+        return new TokenResponse(newtok, RefreshToken);
     }
 }
