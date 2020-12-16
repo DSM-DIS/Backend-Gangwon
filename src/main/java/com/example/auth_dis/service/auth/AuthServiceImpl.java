@@ -57,7 +57,10 @@ public class AuthServiceImpl implements AuthService {
         }catch (Exception e){
             System.out.println("이거 왜안되냐고");
         }
-        return new TokenResponse(accessToken, refreshToken);
+        return TokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
 
