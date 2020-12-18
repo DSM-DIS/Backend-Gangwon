@@ -25,6 +25,7 @@ public class UserController {
 
     @GetMapping(path="/user")
     public UserInformationResponse GET_INFO_BY_ACCESS(@RequestHeader("Authorization") String AccessToken) {
+        System.out.println(AccessToken);
         return userService.GET_INFO_BY_ACCESS(AccessToken);
     }
 
