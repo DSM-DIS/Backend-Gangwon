@@ -6,6 +6,7 @@ import com.example.auth_dis.paylod.UserResponse;
 import com.example.auth_dis.service.auth.AuthService;
 import com.example.auth_dis.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
