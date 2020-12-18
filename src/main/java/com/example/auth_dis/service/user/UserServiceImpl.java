@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
         String email;
         try {
             email = jwtTokenUtil.getId(AccessToken);
+            System.out.println(email);
         } catch (Exception e) {
             System.out.println("토큰 값이 옳지 않음");
             throw new TokenInvalidException("토큰 값이 옳지 않음.");
