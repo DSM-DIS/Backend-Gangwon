@@ -28,7 +28,7 @@ public class UserController {
     public UserInformationResponse GET_INFO_BY_ACCESS(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization");
         System.out.println("accessToken : " + accessToken);
-        return userService.GET_INFO_BY_ACCESS(AccessToken);
+        return userService.GET_INFO_BY_ACCESS(accessToken);
     }
 
 }
