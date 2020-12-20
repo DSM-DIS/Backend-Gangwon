@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserInformationResponse {
     private String name;
-    private String email;
+    private String id;
 }
