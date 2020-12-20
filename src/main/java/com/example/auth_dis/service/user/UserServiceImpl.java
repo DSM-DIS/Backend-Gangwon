@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         logger.info(email);
         if (email != null) {
             User user = userRepository.findById(email).orElseThrow();
-            UserInformationResponse userInformationResponse = new UserInformationResponse(user.getName(), user.getEmail());
+            UserInformationResponse userInformationResponse = new UserInformationResponse(user.getEmail());
             return userInformationResponse;
         } else {
             System.out.println("토큰 값이 옳지 않음");
