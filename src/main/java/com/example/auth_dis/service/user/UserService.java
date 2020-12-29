@@ -8,6 +8,7 @@ import java.util.Map;
 
 public interface UserService {
     void SIGN_IN(UserResponse user);
+    boolean CheckId(String id);
     UserInformationResponse GET_INFO_BY_ACCESS(String AccessToken);
 
 

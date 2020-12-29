@@ -30,5 +30,9 @@ public class UserController {
         System.out.println("accessToken : " + accessToken);
         return userService.GET_INFO_BY_ACCESS(accessToken);
     }
+    @GetMapping(path="/user/check")
+    public boolean CheckId(@RequestBody String id){
+        return userService.CheckId(id);
+    }
 
 }

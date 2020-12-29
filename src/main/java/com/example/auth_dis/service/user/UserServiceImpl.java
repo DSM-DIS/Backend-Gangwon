@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean CheckId(String id) {
+        return !userRepository.existsById(id);
+    }
+
+    @Override
     public UserInformationResponse GET_INFO_BY_ACCESS(String AccessToken) {
         String email;
         try {
