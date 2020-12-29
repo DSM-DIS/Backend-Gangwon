@@ -4,6 +4,8 @@ import com.example.auth_dis.Domain.user.User;
 import com.example.auth_dis.Domain.user.UserRepository;
 import com.example.auth_dis.Exception.*;
 import com.example.auth_dis.jwt.JwtTokenUtil;
+import com.example.auth_dis.paylod.IdResponse;
+import com.example.auth_dis.paylod.StatusResponse;
 import com.example.auth_dis.paylod.UserInformationResponse;
 import com.example.auth_dis.paylod.UserResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,6 +17,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Id;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,8 +73,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean CheckId(String id) {
-        return !userRepository.existsById(id);
+    public StatusResponse CheckId(IdResponse id) {
+        String id2 = id.getId();
+        String string;
+        boolean status = userRepository.existsById(id2);
+        if(status){
+            string = "false";
+        }else{
+            string="true";
+        }
+        return StatusResponse.builder().status(string).build();
     }
 
     @Override

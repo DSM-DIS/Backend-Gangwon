@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IdResponse {
-    private String id;
+public class StatusResponse {
+    private String status;
+
 }

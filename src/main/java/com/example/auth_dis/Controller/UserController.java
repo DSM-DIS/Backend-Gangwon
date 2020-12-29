@@ -1,6 +1,8 @@
 package com.example.auth_dis.Controller;
 
 import com.example.auth_dis.Domain.user.User;
+import com.example.auth_dis.paylod.IdResponse;
+import com.example.auth_dis.paylod.StatusResponse;
 import com.example.auth_dis.paylod.UserInformationResponse;
 import com.example.auth_dis.paylod.UserResponse;
 import com.example.auth_dis.service.auth.AuthService;
@@ -31,7 +33,7 @@ public class UserController {
         return userService.GET_INFO_BY_ACCESS(accessToken);
     }
     @GetMapping(path="/user/check")
-    public boolean CheckId(@RequestBody String id){
+    public StatusResponse CheckId(@RequestBody IdResponse id){
         return userService.CheckId(id);
     }
 
