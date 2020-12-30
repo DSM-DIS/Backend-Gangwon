@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
             email = jwtTokenUtil.getId(AccessToken);
             System.out.println(email);
         } catch (Exception e) {
-            System.out.println("토큰 값이 옳지 않음");
+            System.out.println("토큰 값이 옳지 않음1");
             throw new TokenInvalidException("토큰 값이 옳지 않음.");
         }
         logger.info(email);
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
             UserInformationResponse userInformationResponse = new UserInformationResponse(user.getEmail());
             return userInformationResponse;
         } else {
-            System.out.println("토큰 값이 옳지 않음");
+            System.out.println("토큰 값이 옳지 않음2");
             throw new TokenInvalidException("토큰 값이 옳지 않음.");
         }
     }
