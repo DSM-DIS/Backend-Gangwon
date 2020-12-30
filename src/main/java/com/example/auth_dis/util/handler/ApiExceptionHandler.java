@@ -43,7 +43,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(TokenInvalidException.class)
     public ResponseEntity<ApiErrorResponseForm> tokenInvalidExceptionHandler(TokenInvalidException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("Token Invalid Exception", "토큰이 잘못됨");
-        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(TokenExpirationException.class)

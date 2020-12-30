@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserInformationResponse {
+public class UserIdResponse {
     private String id;
+
 }

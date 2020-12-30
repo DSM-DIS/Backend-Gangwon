@@ -4,12 +4,7 @@ import com.example.auth_dis.Domain.user.User;
 import com.example.auth_dis.Domain.user.UserRepository;
 import com.example.auth_dis.Exception.*;
 import com.example.auth_dis.jwt.JwtTokenUtil;
-import com.example.auth_dis.paylod.IdResponse;
-import com.example.auth_dis.paylod.StatusResponse;
-import com.example.auth_dis.paylod.UserInformationResponse;
-import com.example.auth_dis.paylod.UserResponse;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.SignatureException;
+import com.example.auth_dis.paylod.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +12,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Id;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,16 +70,16 @@ public class UserServiceImpl implements UserService {
         String id2 = id.getId();
         String string;
         boolean status = userRepository.existsById(id2);
-        if(status){
+        if (status) {
             string = "false";
-        }else{
-            string="true";
+        } else {
+            string = "true";
         }
         return StatusResponse.builder().status(string).build();
     }
 
     @Override
-    public UserInformationResponse GET_INFO_BY_ACCESS(String AccessToken) {
+    public UserIdResponse GET_INFO_BY_ACCESS(String AccessToken) {
         String email;
         try {
             email = jwtTokenUtil.getId(AccessToken);
@@ -98,8 +91,29 @@ public class UserServiceImpl implements UserService {
         logger.info(email);
         if (email != null) {
             User user = userRepository.findById(email).orElseThrow();
-            UserInformationResponse userInformationResponse = new UserInformationResponse(user.getEmail());
+            UserIdResponse userInformationResponse = new UserIdResponse(user.getEmail());
             return userInformationResponse;
+        } else {
+            System.out.println("토큰 값이 옳지 않음2");
+            throw new TokenInvalidException("토큰 값이 옳지 않음.");
+        }
+    }
+
+    @Override
+    public UserNameResponse GetUserName(String AccessToken) {
+        String email;
+        try {
+            email = jwtTokenUtil.getId(AccessToken);
+            System.out.println(email);
+        } catch (Exception e) {
+            System.out.println("토큰 값이 옳지 않음1");
+            throw new TokenInvalidException("토큰 값이 옳지 않음.");
+        }
+        logger.info(email);
+        if (email != null) {
+            User user = userRepository.findById(email).orElseThrow();
+            UserNameResponse userNameResponse = new UserNameResponse(user.getName());
+            return userNameResponse;
         } else {
             System.out.println("토큰 값이 옳지 않음2");
             throw new TokenInvalidException("토큰 값이 옳지 않음.");
