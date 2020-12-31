@@ -100,18 +100,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserNameResponse GetUserName(String AccessToken) {
-        String email;
-        try {
-            email = jwtTokenUtil.getId(AccessToken);
-            System.out.println(email);
-        } catch (Exception e) {
-            System.out.println("토큰 값이 옳지 않음1");
-            throw new TokenInvalidException("토큰 값이 옳지 않음.");
-        }
-        logger.info(email);
-        if (email != null) {
-            User user = userRepository.findById(email).orElseThrow();
+    public UserNameResponse GetUserName(String userId) {
+
+        if (userId != null) {
+            User user = userRepository.findById(userId).orElseThrow();
             UserNameResponse userNameResponse = new UserNameResponse(user.getName());
             return userNameResponse;
         } else {

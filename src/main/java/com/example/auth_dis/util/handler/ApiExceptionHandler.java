@@ -18,27 +18,27 @@ public class ApiExceptionHandler {
     @ExceptionHandler(PasswordNotFoundException.class)
     public ResponseEntity<ApiErrorResponseForm> PasswordNotFoundException(PasswordNotFoundException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("Password Mismatch Exception", "비밀번호가 일치하는 계정을 찾을 수 없음");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(IdNotFoundException.class)
     public ResponseEntity<ApiErrorResponseForm> IdNotFoundException(IdNotFoundException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("Id Mismatch Exception", "아이디가 일치하는 계정을 찾을 수 없음");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(PasswordNullException.class)
     public ResponseEntity<ApiErrorResponseForm> PasswordNullException(PasswordNullException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("Password null Exception", "비밀번호의 값이 비었음");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(IdNullException.class)
     public ResponseEntity<ApiErrorResponseForm> IdNullException(IdNullException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("Id null Exception", "아이디의 값이 비었음");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(NameNullException.class)
     public ResponseEntity<ApiErrorResponseForm> NameNullException(NameNullException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("Name null Exception", "닉네임의 값이 비었음");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(TokenInvalidException.class)
     public ResponseEntity<ApiErrorResponseForm> tokenInvalidExceptionHandler(TokenInvalidException ex) {
@@ -65,36 +65,36 @@ public class ApiExceptionHandler {
     @ExceptionHandler(DuplicateNameException.class)
     public ResponseEntity<ApiErrorResponseForm> DuplicateNameException(DuplicateNameException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No Such Element Exception", "이름이 중복됨.");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(DuplicateIdException.class)
     public ResponseEntity<ApiErrorResponseForm> DuplicateIdException(DuplicateIdException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No Such Element Exception", "아이디가 중복됨.");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(PasswordTypeException.class)
     public ResponseEntity<ApiErrorResponseForm> PasswordTypeException(PasswordTypeException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No Such Element Exception", "비밀번호 형식이 맞지않음.");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(IdTypeException.class)
     public ResponseEntity<ApiErrorResponseForm> IdTypeException(IdTypeException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No Such Element Exception", "아이디 형식이 맞지않음.");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(NotFoundUserLoginException.class)
     public ResponseEntity<ApiErrorResponseForm> NotFoundUserLoginException(NotFoundUserLoginException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No Such Element Exception", "아이디 혹은 비밀번호가 틀림.");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<ApiErrorResponseForm> SignatureException(SignatureException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No match JWT token", "토큰의 값이 옳지 않습니다.");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiErrorResponseForm> UserNotFoundException(UserNotFoundException ex) {
         ApiErrorResponseForm response = new ApiErrorResponseForm("No match JWT token", "일치하는 유저가 없습니다.");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 }

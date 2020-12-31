@@ -29,7 +29,7 @@ public class UserController {
     }
     @GetMapping(path="/user/username")
     public UserNameResponse GetUserName(HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization");
+        String accessToken = request.getHeader("userId");
         System.out.println("accessToken : " + accessToken);
         return userService.GetUserName(accessToken);
     }
