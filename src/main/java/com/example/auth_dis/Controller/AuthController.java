@@ -19,7 +19,7 @@ public class AuthController {
 
     @Transactional
     @DeleteMapping(path="/auth")
-    public ResponseEntity<?> LOG_OUT(@RequestHeader("refreshToken") String RefreshToken) {
+    public ResponseEntity<?> LOG_OUT(@RequestHeader("Authorization") String RefreshToken) {
         return authService.LOG_OUT(RefreshToken);
     }
     @PostMapping(path = "/auth")
@@ -28,7 +28,7 @@ public class AuthController {
         return authService.LOG_IN(accountRequest);
     }
     @PatchMapping(path="/auth")
-    public TokenResponse GET_ACCESS_BY_REFRESH(@RequestHeader("refreshToken") String RefreshToken) {
+    public TokenResponse GET_ACCESS_BY_REFRESH(@RequestHeader("Authorization") String RefreshToken) {
         return authService.GET_ACCESS_BY_REFRESH(RefreshToken);
     }
     
