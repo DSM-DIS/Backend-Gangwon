@@ -33,12 +33,12 @@ public class UserController {
         System.out.println("accessToken : " + accessToken);
         return userService.GetUserName(accessToken);
     }
-    @GetMapping(path="/check/id")
+    @PostMapping(path="/check/id")
     public StatusResponse CheckId(@RequestBody IdResponse id){
         return userService.CheckId(id);
     }
 
-    @GetMapping(path="/check/username")
+    @PostMapping(path="/check/username")
     public StatusResponse CheckUsername(@RequestBody NameResponse username){
         return userService.CheckUsername(username);
     }
