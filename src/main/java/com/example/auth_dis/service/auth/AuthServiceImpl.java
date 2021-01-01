@@ -8,6 +8,7 @@ import com.example.auth_dis.Exception.TokenInvalidException;
 import com.example.auth_dis.Exception.UserNotFoundException;
 import com.example.auth_dis.jwt.JwtTokenUtil;
 
+import com.example.auth_dis.paylod.AccessTokenResponse;
 import com.example.auth_dis.paylod.AccountRequest;
 import com.example.auth_dis.paylod.TokenResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -78,15 +79,6 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(email)
                 .orElseThrow();
 
-//        try {
-//            if (redisTemplate.opsForValue().get(user.getEmail()) != null) {
-//                //delete refresh token
-//                redisTemplate.delete(user.getEmail());
-//            }
-//        } catch (IllegalArgumentException e) {
-//            logger.warn("user does not exist");
-//        }
-
         logger.info(" logout ing : " + refreshToken);
         redisTemplate.expire(refreshToken,  24 * 60 * 60 * 7 * 1000, TimeUnit.MILLISECONDS);
 
@@ -95,9 +87,9 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public TokenResponse GET_ACCESS_BY_REFRESH(String RefreshToken) {
+    public AccessTokenResponse GET_ACCESS_BY_REFRESH(String RefreshToken) {
         if (!jwtTokenUtil.isRefreshToken(RefreshToken)) throw new TokenInvalidException("토큰 에러뿅");
         String newtok = jwtTokenUtil.generateAccessToken(jwtTokenUtil.getId(RefreshToken));
-        return new TokenResponse(newtok, RefreshToken);
+        return new AccessTokenResponse(newtok);
     }
 }

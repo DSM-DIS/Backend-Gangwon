@@ -1,5 +1,6 @@
 package com.example.auth_dis.Controller;
 
+import com.example.auth_dis.paylod.AccessTokenResponse;
 import com.example.auth_dis.paylod.AccountRequest;
 import com.example.auth_dis.service.auth.AuthService;
 import com.example.auth_dis.paylod.TokenResponse;
@@ -28,7 +29,7 @@ public class AuthController {
         return authService.LOG_IN(accountRequest);
     }
     @PatchMapping(path="/auth")
-    public TokenResponse GET_ACCESS_BY_REFRESH(@RequestHeader("Authorization") String RefreshToken) {
+    public AccessTokenResponse GET_ACCESS_BY_REFRESH(@RequestHeader("Authorization") String RefreshToken) {
         return authService.GET_ACCESS_BY_REFRESH(RefreshToken);
     }
     
