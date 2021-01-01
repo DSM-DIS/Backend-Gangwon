@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
-    public void SIGN_IN(UserResponse user) {
+    public void SIGN_IN(UserRequest user) {
         String pw_role = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}";
         String Id_role = ".{8,20}";
         String name_role = ".{1,20}";
@@ -70,6 +70,19 @@ public class UserServiceImpl implements UserService {
         String id2 = id.getId();
         String string;
         boolean status = userRepository.existsById(id2);
+        if (status) {
+            string = "false";
+        } else {
+            string = "true";
+        }
+        return StatusResponse.builder().status(string).build();
+    }
+
+    @Override
+    public StatusResponse CheckUsername(NameResponse username) {
+        String name = username.getUsername();
+        String string;
+        boolean status = userRepository.existsByName(name);
         if (status) {
             string = "false";
         } else {

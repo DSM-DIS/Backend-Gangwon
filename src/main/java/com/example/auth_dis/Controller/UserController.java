@@ -1,9 +1,9 @@
 package com.example.auth_dis.Controller;
 
-import com.example.auth_dis.Domain.user.User;
 import com.example.auth_dis.paylod.*;
 import com.example.auth_dis.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(path="/user")
-    public void SIGN_IN (@RequestBody @Valid UserResponse user) {
+    public void SIGN_IN (@RequestBody @Valid UserRequest user) {
         System.out.println(user);
         userService.SIGN_IN(user);
     }
@@ -33,9 +33,14 @@ public class UserController {
         System.out.println("accessToken : " + accessToken);
         return userService.GetUserName(accessToken);
     }
-    @GetMapping(path="/user/check")
+    @GetMapping(path="/check/id")
     public StatusResponse CheckId(@RequestBody IdResponse id){
         return userService.CheckId(id);
+    }
+
+    @GetMapping(path="/check/username")
+    public StatusResponse CheckUsername(@RequestBody NameResponse username){
+        return userService.CheckUsername(username);
     }
 
 }
