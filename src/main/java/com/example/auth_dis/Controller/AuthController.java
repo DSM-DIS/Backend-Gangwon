@@ -20,7 +20,7 @@ public class AuthController {
 
     @Transactional
     @DeleteMapping(path="/auth")
-    public ResponseEntity<?> LOG_OUT(@RequestHeader("Authorization") String RefreshToken) {
+    public ResponseEntity<?> LOG_OUT(@RequestHeader("userId") String RefreshToken) {
         System.out.println(RefreshToken);
         return authService.LOG_OUT(RefreshToken);
     }
@@ -30,7 +30,7 @@ public class AuthController {
         return authService.LOG_IN(accountRequest);
     }
     @PatchMapping(path="/auth")
-    public AccessTokenResponse GET_ACCESS_BY_REFRESH(@RequestHeader("Authorization") String RefreshToken) {
+        public AccessTokenResponse GET_ACCESS_BY_REFRESH(@RequestHeader("Authorization") String RefreshToken) {
         System.out.println(RefreshToken);
         return authService.GET_ACCESS_BY_REFRESH(RefreshToken);
     }
